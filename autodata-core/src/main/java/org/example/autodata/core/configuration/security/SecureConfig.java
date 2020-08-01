@@ -1,5 +1,6 @@
 package org.example.autodata.core.configuration.security;
 
+import org.example.autodata.core.common.jwt.JwtAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,9 +25,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
 public class SecureConfig extends WebSecurityConfigurerAdapter {
     @Autowired
+    private JwtAuthenticationEntryPoint unauthorizedHandler;
+    @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                .userDetailsService(null)
+                .inMemoryAuthentication()
                 .passwordEncoder(passwordEncoderBean());
     }
     @Bean
@@ -39,6 +42,8 @@ public class SecureConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 // 禁用 CSRF
                 .csrf().disable()
+                // 授权异常
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 // 不创建会话
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
