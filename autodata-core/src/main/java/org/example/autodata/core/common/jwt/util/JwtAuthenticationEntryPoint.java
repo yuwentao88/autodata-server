@@ -1,4 +1,4 @@
-package org.example.autodata.core.common.jwt;
+package org.example.autodata.core.common.jwt.util;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
